@@ -9,7 +9,7 @@ function  clearTrace(){
     document.querySelectorAll('.click-trace-line, .click-trace-tooltip').forEach(el => el.remove());
 }
 // Function to draw lines relative to the selected element
-function drawLines(event, selectedElement = null) {
+function drawLines(event) {
     const pointerX = event.clientX;
     const pointerY = event.clientY;
 
@@ -17,7 +17,7 @@ function drawLines(event, selectedElement = null) {
     clearItems();
 
     // Get the target element of the initial click
-    const targetElement = selectedElement || event.target;
+    const targetElement = event.target;
     let element = event.target;
 
     // Create an array to store the hierarchy
