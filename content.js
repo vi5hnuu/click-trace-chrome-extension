@@ -130,6 +130,7 @@ function drawHierarchyList(pointerX, pointerY) {
         item.style.padding = '2px 4px';
         item.style.cursor = 'pointer';
         item.style.borderBottom = '1px solid #fff';
+        item.style.color = '#000';
 
         item.addEventListener('click', (e) => {
             e.stopPropagation();
