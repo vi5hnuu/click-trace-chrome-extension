@@ -143,5 +143,5 @@ function drawHierarchyList(pointerX, pointerY) {
 }
 
 // Add event listener for clicks
-document.addEventListener('click', drawLines);
-document.addEventListener('dblclick', clearItems);
+document.addEventListener('click', (e)=>e.shiftKey && drawLines(e));
+document.addEventListener('dblclick', (e)=>e.shiftKey && clearItems(e));
