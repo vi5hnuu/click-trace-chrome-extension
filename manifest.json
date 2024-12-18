@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Click Trace",
+  "version": "1.0",
+  "description": "Draws lines to the clicked position and shows the DOM hierarchy.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Enable Click Trace",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}
