@@ -88,23 +88,8 @@ function drawElementLines(element, pointerX, pointerY) {
     tooltip.style.border = '1px solid #000';
     tooltip.style.zIndex = '10000';
     tooltip.style.whiteSpace = 'normal'; // Allow normal line wrapping
-
-// Ensure the tooltip stays within the viewport
-    let tooltipLeft = pointerX + 10;
-    let tooltipTop = pointerY + 10;
-
-// Check if tooltip goes off the right edge of the viewport
-    if (tooltipLeft + 200 > window.innerWidth) {
-        tooltipLeft = window.innerWidth - 210; // Adjust to keep within viewport
-    }
-
-// Check if tooltip goes off the bottom edge of the viewport
-    if (tooltipTop + tooltip.offsetHeight > window.innerHeight) {
-        tooltipTop = window.innerHeight - tooltip.offsetHeight - 10; // Adjust to keep within viewport
-    }
-
-    tooltip.style.left = `${tooltipLeft}px`;
-    tooltip.style.top = `${tooltipTop}px`;
+    tooltip.style.right = '10px';
+    tooltip.style.top = '10px';
 
     document.body.appendChild(tooltip);
 }
