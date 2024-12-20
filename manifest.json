@@ -3,7 +3,7 @@
   "name": "Click Trace",
   "version": "1.0",
   "description": "Draws lines to the clicked position and shows the DOM hierarchy.",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": [],
   "background": {
     "service_worker": "background.js"
   },
