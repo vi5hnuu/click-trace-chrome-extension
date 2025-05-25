@@ -144,5 +144,14 @@ function drawHierarchyList(pointerX, pointerY) {
 }
 
 // Add event listener for clicks
-document.addEventListener('click', (e)=>e.shiftKey && drawLines(e));
-document.addEventListener('dblclick', (e)=>e.shiftKey && clearItems(e));
+document.addEventListener('click', (e)=>{
+    if(!e.shiftKey || !(e.metaKey || e.ctrlKey)) return;
+    e.preventDefault();
+    drawLines(e);
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.shiftKey && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'x') {
+        clearItems(e);
+    }
+});
