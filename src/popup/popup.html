@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Click Trace</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <img class="header__logo" src="/icons/48x48.png" alt="" width="28" height="28" />
+      <div class="header__text">
+        <h1 class="header__title">Click Trace</h1>
+        <p class="header__subtitle">Inspect · measure · trace</p>
+      </div>
+      <span class="header__version" id="version"></span>
+    </header>
+
+    <main>
+      <div class="banner" id="restricted" hidden>
+        <span class="banner__icon" data-icon="alert"></span>
+        <div>
+          <strong>Not available on this page</strong>
+          <p>
+            Browsers block extensions on internal pages and the Web Store. Open any website to use
+            Click Trace.
+          </p>
+        </div>
+      </div>
+
+      <section aria-labelledby="tools-title">
+        <h2 class="section-title" id="tools-title">Tools</h2>
+        <div class="tools" id="tools"></div>
+        <button class="close-overlay" id="close-overlay" type="button" hidden>
+          <span data-icon="close"></span> Close Click Trace on this page
+        </button>
+      </section>
+
+      <section aria-labelledby="settings-title">
+        <h2 class="section-title" id="settings-title">Settings</h2>
+        <div class="setting">
+          <span class="setting__label" id="units-label">Units</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="units-label" id="units"></div>
+        </div>
+        <div class="setting">
+          <span class="setting__label" id="theme-label">Theme</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="theme-label" id="theme"></div>
+        </div>
+        <div class="setting">
+          <span class="setting__label" id="accent-label">Accent</span>
+          <div class="accents" role="radiogroup" aria-labelledby="accent-label" id="accent"></div>
+        </div>
+        <label class="setting setting--toggle">
+          <span class="setting__label">Snap rulers to edges</span>
+          <input type="checkbox" class="switch" id="snapping" />
+        </label>
+      </section>
+
+      <section aria-labelledby="shortcuts-title">
+        <h2 class="section-title" id="shortcuts-title">Shortcuts</h2>
+        <ul class="shortcuts" id="shortcuts"></ul>
+        <p class="tip">
+          After first use on a page, <kbd>⌘/Ctrl</kbd> + <kbd>Shift</kbd> + click any element to
+          inspect it.
+        </p>
+        <button class="link" id="customize" type="button">
+          Customize shortcuts <span data-icon="external"></span>
+        </button>
+      </section>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

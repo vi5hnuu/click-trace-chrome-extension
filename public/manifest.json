@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Click Trace",
+  "version": "2.0.0",
+  "description": "Inspect, measure and trace any element: box model, ruler, spacing, styles, colors and layout grids.",
+  "minimum_chrome_version": "116",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Click Trace",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/16x16.png",
+      "48": "icons/48x48.png",
+      "128": "icons/128x128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16x16.png",
+    "48": "icons/48x48.png",
+    "128": "icons/128x128.png"
+  },
+  "commands": {
+    "toggle-inspect": {
+      "suggested_key": { "default": "Alt+Shift+I" },
+      "description": "Toggle the Inspect tool"
+    },
+    "toggle-ruler": {
+      "suggested_key": { "default": "Alt+Shift+R" },
+      "description": "Toggle the Ruler tool"
+    },
+    "close-overlay": {
+      "suggested_key": { "default": "Alt+Shift+X" },
+      "description": "Close Click Trace on the page"
+    }
+  }
+}
