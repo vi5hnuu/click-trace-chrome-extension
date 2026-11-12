@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — Click Trace</title>
+    <meta
+      name="description"
+      content="Click Trace collects no personal data, makes no network requests and stores settings only in your browser."
+    />
+    <link
+      rel="canonical"
+      href="https://vi5hnuu.github.io/click-trace-chrome-extension/privacy.html"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/48x48.png" />
+    <style>
+      :root {
+        --bg: #fff;
+        --text: #15151a;
+        --muted: #5f5f6b;
+        --accent: #6d5efc;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d0d12;
+          --text: #f3f3f6;
+          --muted: #a3a3ae;
+          color-scheme: dark;
+        }
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          16px/1.7 Inter,
+          ui-sans-serif,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+      main {
+        width: min(720px, 100% - 32px);
+        margin: 64px auto;
+      }
+      h1 {
+        letter-spacing: -0.02em;
+      }
+      p,
+      li {
+        color: var(--muted);
+      }
+      a {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="./">← Click Trace</a></p>
+      <h1>Privacy Policy</h1>
+      <p>Last updated: 12 November 2026</p>
+      <h2>Summary</h2>
+      <p>Click Trace does not collect, transmit, sell or share any personal or browsing data.</p>
+      <h2>What the extension accesses</h2>
+      <ul>
+        <li>
+          It runs on a page only after you open it from the toolbar or with a keyboard shortcut (the
+          <code>activeTab</code> permission).
+        </li>
+        <li>
+          It reads element positions and computed styles on that page to display measurements. This
+          information never leaves your browser.
+        </li>
+        <li>It makes no network requests.</li>
+      </ul>
+      <h2>What is stored</h2>
+      <ul>
+        <li>
+          Your preferences (theme, accent color, units, grid settings, toolbar position and recently
+          picked colors) are saved with <code>chrome.storage.local</code> on your device.
+        </li>
+        <li>
+          Screenshots are saved to your Downloads folder and copied to your clipboard. They are
+          never uploaded.
+        </li>
+        <li>
+          Design mockups you add to the overlay stay in memory on that page and are discarded when
+          you close the tab.
+        </li>
+      </ul>
+      <h2>Contact</h2>
+      <p>
+        Questions?
+        <a href="https://github.com/vi5hnuu/click-trace-chrome-extension/issues"
+          >Open an issue on GitHub</a
+        >.
+      </p>
+    </main>
+  </body>
+</html>

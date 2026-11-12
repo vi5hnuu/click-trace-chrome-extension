@@ -1,10 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "Click Trace",
+  "name": "Click Trace — CSS Inspector, Ruler & Spacing Tool",
+  "short_name": "Click Trace",
   "version": "2.0.0",
-  "description": "Inspect, measure and trace any element: box model, ruler, spacing, styles, colors and layout grids.",
+  "description": "Inspect CSS, box model and contrast, measure with a snapping ruler, check spacing, grids and pixel-perfect design overlays.",
+  "homepage_url": "https://vi5hnuu.github.io/click-trace-chrome-extension/",
   "minimum_chrome_version": "116",
-  "permissions": ["activeTab", "scripting", "storage"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -25,15 +31,21 @@
   },
   "commands": {
     "toggle-inspect": {
-      "suggested_key": { "default": "Alt+Shift+I" },
+      "suggested_key": {
+        "default": "Alt+Shift+I"
+      },
       "description": "Toggle the Inspect tool"
     },
     "toggle-ruler": {
-      "suggested_key": { "default": "Alt+Shift+R" },
+      "suggested_key": {
+        "default": "Alt+Shift+R"
+      },
       "description": "Toggle the Ruler tool"
     },
     "close-overlay": {
-      "suggested_key": { "default": "Alt+Shift+X" },
+      "suggested_key": {
+        "default": "Alt+Shift+X"
+      },
       "description": "Close Click Trace on the page"
     }
   }

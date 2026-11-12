@@ -24,3 +24,14 @@ describe('lengths', () => {
     expect(formatLength(100.25, 'px', context)).toBe('100.3px');
   });
 });
+
+describe('breakpointFor', async () => {
+  const { breakpointFor } = await import('../../src/content/lib/breakpoints');
+  it('maps widths to Tailwind breakpoints', () => {
+    expect(breakpointFor(320)).toBe('xs');
+    expect(breakpointFor(640)).toBe('sm');
+    expect(breakpointFor(1023)).toBe('md');
+    expect(breakpointFor(1280)).toBe('xl');
+    expect(breakpointFor(2000)).toBe('2xl');
+  });
+});

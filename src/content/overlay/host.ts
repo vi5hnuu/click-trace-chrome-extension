@@ -31,9 +31,11 @@ export class OverlayHost {
     this.applyTheme(this.themePreference);
   };
   private readonly onToggle = (event: Event) => {
-    if (event.target !== this.element && (event as ToggleEvent).newState === 'open') this.raise();
+    const target = event.target as Node | null;
+    if (!this.owns(target) && (event as ToggleEvent).newState === 'open') this.raise();
   };
   private themePreference: Settings['theme'] = 'system';
+  private readonly auxiliary = new Set<HTMLElement>();
 
   constructor() {
     this.element = document.createElement(HOST_TAG);
@@ -65,8 +67,24 @@ export class OverlayHost {
     this.element.remove();
   }
 
-  contains(node: Node | null): boolean {
-    return node === this.element || (node !== null && this.element.contains(node));
+  /**
+   * Whether a node belongs to Click Trace: the main host or any auxiliary host a tool has
+   * registered (such as the design overlay). Arrow function so it can be passed around.
+   */
+  readonly owns = (node: Node | null): boolean => {
+    if (!node) return false;
+    for (const host of [this.element, ...this.auxiliary]) {
+      if (node === host || host.contains(node)) return true;
+    }
+    return false;
+  };
+
+  /** Registers an extra top-layer element owned by a tool; it is ignored by element picking. */
+  registerAuxiliary(element: HTMLElement): () => void {
+    this.auxiliary.add(element);
+    return () => {
+      this.auxiliary.delete(element);
+    };
   }
 
   applySettings(settings: Settings): void {
@@ -89,7 +107,7 @@ export class OverlayHost {
   }
 
   /** (Re)inserts the host into the top layer above anything the page has opened since. */
-  private raise(): void {
+  raise(): void {
     const modals = document.querySelectorAll('dialog:modal');
     const parent = modals[modals.length - 1] ?? document.documentElement;
     if (this.element.parentNode !== parent) parent.append(this.element);

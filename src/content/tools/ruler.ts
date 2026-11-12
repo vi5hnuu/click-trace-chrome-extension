@@ -310,7 +310,7 @@ export class RulerTool extends BaseTool {
   /** Edges near `point` that measurements can snap to, in viewport coordinates. */
   private snapCandidates(point: Point, excludeId?: number): { xs: number[]; ys: number[] } {
     const rects: Rect[] = [];
-    for (const element of pageElementsAt(point, this.ctx.host.element).slice(0, 8)) {
+    for (const element of pageElementsAt(point, this.ctx.host.owns).slice(0, 8)) {
       rects.push(toRect(element.getBoundingClientRect()));
       for (const child of [...element.children].slice(0, 40))
         rects.push(toRect(child.getBoundingClientRect()));

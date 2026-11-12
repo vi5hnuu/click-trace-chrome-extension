@@ -9,7 +9,7 @@
   </head>
   <body>
     <header class="header">
-      <img class="header__logo" src="/icons/48x48.png" alt="" width="28" height="28" />
+      <img class="header__logo" src="/icons/48x48.png" alt="" width="32" height="32" />
       <div class="header__text">
         <h1 class="header__title">Click Trace</h1>
         <p class="header__subtitle">Inspect · measure · trace</p>
@@ -29,46 +29,84 @@
         </div>
       </div>
 
-      <section aria-labelledby="tools-title">
-        <h2 class="section-title" id="tools-title">Tools</h2>
-        <div class="tools" id="tools"></div>
-        <button class="close-overlay" id="close-overlay" type="button" hidden>
-          <span data-icon="close"></span> Close Click Trace on this page
-        </button>
+      <button class="cta" id="cta" type="button">
+        <span class="cta__icon" data-icon="inspect"></span>
+        <span class="cta__text">
+          <strong>Start inspecting</strong>
+          <span>Hover any element · click to pin</span>
+        </span>
+        <kbd id="cta-shortcut">I</kbd>
+      </button>
+
+      <section aria-labelledby="measure-title">
+        <h2 class="section-title" id="measure-title">Inspect &amp; measure</h2>
+        <div class="tools" id="tools-exclusive"></div>
       </section>
 
-      <section aria-labelledby="settings-title">
-        <h2 class="section-title" id="settings-title">Settings</h2>
-        <div class="setting">
-          <span class="setting__label" id="units-label">Units</span>
-          <div class="segmented" role="radiogroup" aria-labelledby="units-label" id="units"></div>
-        </div>
-        <div class="setting">
-          <span class="setting__label" id="theme-label">Theme</span>
-          <div class="segmented" role="radiogroup" aria-labelledby="theme-label" id="theme"></div>
-        </div>
-        <div class="setting">
-          <span class="setting__label" id="accent-label">Accent</span>
-          <div class="accents" role="radiogroup" aria-labelledby="accent-label" id="accent"></div>
-        </div>
-        <label class="setting setting--toggle">
-          <span class="setting__label">Snap rulers to edges</span>
-          <input type="checkbox" class="switch" id="snapping" />
-        </label>
+      <section aria-labelledby="overlay-title">
+        <h2 class="section-title" id="overlay-title">Overlays</h2>
+        <div class="tools tools--compact" id="tools-layer"></div>
       </section>
 
-      <section aria-labelledby="shortcuts-title">
-        <h2 class="section-title" id="shortcuts-title">Shortcuts</h2>
-        <ul class="shortcuts" id="shortcuts"></ul>
-        <p class="tip">
-          After first use on a page, <kbd>⌘/Ctrl</kbd> + <kbd>Shift</kbd> + click any element to
-          inspect it.
-        </p>
-        <button class="link" id="customize" type="button">
-          Customize shortcuts <span data-icon="external"></span>
-        </button>
-      </section>
+      <button class="close-overlay" id="close-overlay" type="button" hidden>
+        <span data-icon="close"></span> Close Click Trace on this page
+      </button>
+
+      <details class="group">
+        <summary>Settings</summary>
+        <div class="group__body">
+          <div class="setting">
+            <span class="setting__label" id="units-label">Units</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="units-label" id="units"></div>
+          </div>
+          <div class="setting">
+            <span class="setting__label" id="theme-label">Theme</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="theme-label" id="theme"></div>
+          </div>
+          <div class="setting">
+            <span class="setting__label" id="accent-label">Accent</span>
+            <div class="accents" role="radiogroup" aria-labelledby="accent-label" id="accent"></div>
+          </div>
+          <label class="setting">
+            <span class="setting__label">Snap rulers to edges</span>
+            <input type="checkbox" class="switch" id="snapping" />
+          </label>
+        </div>
+      </details>
+
+      <details class="group">
+        <summary>Keyboard shortcuts</summary>
+        <div class="group__body">
+          <ul class="shortcuts" id="shortcuts"></ul>
+          <p class="tip">
+            On the page: tool letters, <kbd>K</kbd> screenshot, <kbd>?</kbd> all shortcuts. After
+            first use, <kbd>⌘/Ctrl</kbd> <kbd>⇧</kbd> + click inspects any element.
+          </p>
+          <button class="link" id="customize" type="button">
+            Customize shortcuts <span data-icon="external"></span>
+          </button>
+        </div>
+      </details>
     </main>
+
+    <footer class="footer">
+      <a
+        id="website"
+        href="https://vi5hnuu.github.io/click-trace-chrome-extension/"
+        target="_blank"
+        rel="noopener"
+        >Website</a
+      >
+      <span aria-hidden="true">·</span>
+      <a id="review" href="#" target="_blank" rel="noopener">Rate Click Trace</a>
+      <span aria-hidden="true">·</span>
+      <a
+        href="https://github.com/vi5hnuu/click-trace-chrome-extension/issues"
+        target="_blank"
+        rel="noopener"
+        >Report an issue</a
+      >
+    </footer>
 
     <script type="module" src="./main.ts"></script>
   </body>

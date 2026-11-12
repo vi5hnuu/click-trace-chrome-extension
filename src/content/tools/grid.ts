@@ -45,7 +45,7 @@ export class GridTool extends BaseTool {
     this.panel = new Panel({
       title: 'Layout grid',
       icon: 'grid',
-      side: 'left',
+      anchor: 'top-left',
       onClose: () => {
         this.ctx.deactivateTool(this.id);
       },

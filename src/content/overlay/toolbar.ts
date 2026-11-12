@@ -1,6 +1,7 @@
 import { createIcon } from '../../shared/icons';
 import type { LengthUnit, Position } from '../../shared/settings';
-import { TOOLS, type ToolId } from '../../shared/tools';
+import { TOOLS, type ToolId, type ToolMeta } from '../../shared/tools';
+import { breakpointFor } from '../lib/breakpoints';
 import { clamp } from '../lib/geometry';
 import { iconButton, kbd } from './components';
 import { onDrag } from './drag';
@@ -8,17 +9,31 @@ import { h, placeAt } from './h';
 
 export interface ToolbarCallbacks {
   readonly onSelect: (tool: ToolId) => void;
+  readonly onCapture: () => void;
+  readonly onHelp: () => void;
   readonly onCycleUnit: () => void;
+  readonly onCopyViewport: (text: string) => void;
   readonly onClose: () => void;
   readonly onMoved: (position: Position) => void;
 }
 
-/** Floating, draggable dock with one button per tool plus a context hint line. */
+export interface ToolbarState {
+  readonly activeTool: ToolId | null;
+  readonly layers: readonly ToolId[];
+  readonly unit: LengthUnit;
+  readonly hint: string;
+}
+
+/** Docks closer than this to the top show their tooltips below the buttons. */
+const TOP_THRESHOLD = 64;
+
+/** Floating, draggable dock: tool buttons, actions, context hint and a live viewport badge. */
 export class Toolbar {
   readonly element: HTMLElement;
   private readonly buttons = new Map<ToolId, HTMLButtonElement>();
   private readonly unitButton: HTMLButtonElement;
   private readonly hint: HTMLElement;
+  private readonly viewport: HTMLButtonElement;
   private readonly controller = new AbortController();
   private position: Position | null;
 
@@ -28,7 +43,7 @@ export class Toolbar {
       createIcon('grip', 14),
     ]);
 
-    const toolButtons = TOOLS.map((tool) => {
+    const toolButton = (tool: ToolMeta) => {
       const btn = iconButton(
         tool.icon,
         `${tool.label} (${tool.key})`,
@@ -40,24 +55,30 @@ export class Toolbar {
       btn.setAttribute('aria-pressed', 'false');
       this.buttons.set(tool.id, btn);
       return btn;
-    });
+    };
+    const exclusive = TOOLS.filter((tool) => tool.kind === 'exclusive').map(toolButton);
+    const layers = TOOLS.filter((tool) => tool.kind === 'layer').map(toolButton);
 
     this.unitButton = h('button', {
       class: 'ct-dock__unit',
       attrs: {
         type: 'button',
-        'data-tip': 'Measurement unit (U)',
+        'data-tip': 'Units (U)',
         'aria-label': 'Change measurement unit',
       },
       on: { click: callbacks.onCycleUnit },
     });
 
-    const close = iconButton(
-      'close',
-      'Close (Esc)',
-      callbacks.onClose,
-      'ct-dock__btn ct-dock__btn--close',
-    );
+    this.viewport = h('button', {
+      class: 'ct-dock__viewport',
+      title: 'Viewport size and Tailwind breakpoint · click to copy',
+      attrs: { type: 'button' },
+      on: {
+        click: () => {
+          callbacks.onCopyViewport(`${window.innerWidth}×${window.innerHeight}`);
+        },
+      },
+    });
 
     this.hint = h('div', { class: 'ct-dock__hint' });
     this.element = h(
@@ -66,12 +87,16 @@ export class Toolbar {
       [
         h('div', { class: 'ct-dock__row' }, [
           grip,
-          ...toolButtons,
+          ...exclusive,
           h('span', { class: 'ct-dock__sep' }),
+          ...layers,
+          h('span', { class: 'ct-dock__sep' }),
+          iconButton('camera', 'Screenshot (K)', callbacks.onCapture, 'ct-dock__btn'),
+          iconButton('help', 'Shortcuts (?)', callbacks.onHelp, 'ct-dock__btn'),
           this.unitButton,
-          close,
+          iconButton('close', 'Close (Esc)', callbacks.onClose, 'ct-dock__btn ct-dock__btn--close'),
         ]),
-        this.hint,
+        h('div', { class: 'ct-dock__footer' }, [this.hint, this.viewport]),
       ],
     );
 
@@ -97,25 +122,22 @@ export class Toolbar {
     window.addEventListener(
       'resize',
       () => {
+        this.renderViewport();
         this.reposition();
       },
-      { signal: this.controller.signal },
+      { signal: this.controller.signal, passive: true },
     );
   }
 
   mount(parent: HTMLElement): void {
     parent.append(this.element);
+    this.renderViewport();
     this.reposition();
   }
 
-  update(state: {
-    activeTool: ToolId | null;
-    gridVisible: boolean;
-    unit: LengthUnit;
-    hint: string;
-  }): void {
+  update(state: ToolbarState): void {
     for (const [id, btn] of this.buttons) {
-      const pressed = id === 'grid' ? state.gridVisible : id === state.activeTool;
+      const pressed = id === state.activeTool || state.layers.includes(id);
       btn.classList.toggle('is-active', pressed);
       btn.setAttribute('aria-pressed', String(pressed));
     }
@@ -124,13 +146,23 @@ export class Toolbar {
     this.reposition();
   }
 
-  get height(): number {
-    return this.element.offsetHeight;
+  /** Hides the dock (e.g. while taking a screenshot) without tearing it down. */
+  setHidden(hidden: boolean): void {
+    this.element.hidden = hidden;
   }
 
   destroy(): void {
     this.controller.abort();
     this.element.remove();
+  }
+
+  private renderViewport(): void {
+    const width = window.innerWidth;
+    this.viewport.replaceChildren(
+      createIcon('monitor', 12),
+      document.createTextNode(` ${width} × ${window.innerHeight} `),
+      h('span', { class: 'ct-dock__bp', text: breakpointFor(width) }),
+    );
   }
 
   /** Renders hint text where `[Key]` tokens become <kbd> chips. */
@@ -149,10 +181,8 @@ export class Toolbar {
     const height = this.element.offsetHeight;
     const fallback = { x: (window.innerWidth - width) / 2, y: window.innerHeight - height - 20 };
     const { x, y } = this.position ?? fallback;
-    placeAt(
-      this.element,
-      clamp(x, 4, Math.max(4, window.innerWidth - width - 4)),
-      clamp(y, 4, Math.max(4, window.innerHeight - height - 4)),
-    );
+    const top = clamp(y, 4, Math.max(4, window.innerHeight - height - 4));
+    placeAt(this.element, clamp(x, 4, Math.max(4, window.innerWidth - width - 4)), top);
+    this.element.classList.toggle('is-top', top < TOP_THRESHOLD);
   }
 }

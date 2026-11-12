@@ -207,8 +207,14 @@ export class InspectTool extends BaseTool {
   private renderPinned(): void {
     if (!this.pinLayer) return;
     const pinned = this.pinned;
-    if (!pinned?.element.isConnected) {
+    if (!pinned) {
       this.pinLayer.replaceChildren();
+      return;
+    }
+    if (!pinned.element.isConnected) {
+      // The page re-rendered and removed the element (common in SPAs).
+      this.unpin();
+      this.ctx.toast('The pinned element was removed from the page');
       return;
     }
     const model = boxModel(pinned.element);
@@ -519,7 +525,10 @@ function accessibleName(element: Element): string {
     labelledBy,
     element.getAttribute('alt'),
     element.getAttribute('title'),
-    element.textContent,
+    // innerText keeps word breaks between elements; skip it for huge subtrees (e.g. <body>).
+    element instanceof HTMLElement && element.childElementCount < 50
+      ? element.innerText.slice(0, 400)
+      : element.textContent.slice(0, 400),
   ];
   const name = candidates.map((value) => value?.trim() ?? '').find((value) => value !== '') ?? '';
   return name.replace(/\s+/g, ' ').slice(0, 80);

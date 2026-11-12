@@ -35,8 +35,10 @@ function start(): Instance {
   chrome.runtime.onMessage.addListener(onMessage);
 
   let unsubscribe: (() => void) | null = null;
+  let instance: App | null = null;
   void ready.then((app) => {
     if (controller.signal.aborted) return;
+    instance = app;
     unsubscribe = onSettingsChanged((settings) => {
       app.applySettings(settings);
     });
@@ -45,12 +47,11 @@ function start(): Instance {
   window.addEventListener(
     'click',
     (event) => {
-      if (!event.shiftKey || !(event.metaKey || event.ctrlKey)) return;
+      if (!event.shiftKey || !(event.metaKey || event.ctrlKey) || !instance) return;
+      if (instance.owns(event.composedPath()[0] as Node | null)) return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      void ready.then((app) => {
-        app.inspectAt({ x: event.clientX, y: event.clientY });
-      });
+      instance.inspectAt({ x: event.clientX, y: event.clientY });
     },
     { capture: true, signal: controller.signal },
   );

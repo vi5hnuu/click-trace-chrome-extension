@@ -35,22 +35,26 @@
   --ct-good: #10b981;
   --ct-warn: #f59e0b;
 
-  --ct-surface: rgb(22 22 28 / 0.94);
+  --ct-surface: rgb(16 16 22 / 0.86);
   --ct-surface-2: rgb(255 255 255 / 0.06);
   --ct-surface-3: rgb(255 255 255 / 0.1);
   --ct-border: rgb(255 255 255 / 0.1);
   --ct-text: #f4f4f6;
   --ct-text-muted: #a1a1aa;
-  --ct-shadow: 0 12px 32px rgb(0 0 0 / 0.35), 0 2px 8px rgb(0 0 0 / 0.25);
+  --ct-shadow:
+    0 24px 48px -12px rgb(0 0 0 / 0.45), 0 4px 12px rgb(0 0 0 / 0.25),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --ct-glow: 0 6px 18px -4px color-mix(in srgb, var(--ct-accent) 70%, transparent);
 
   --ct-margin: rgb(246 178 107 / 0.5);
   --ct-border-box: rgb(255 229 153 / 0.55);
   --ct-padding: rgb(147 196 125 / 0.5);
   --ct-content: rgb(111 168 220 / 0.45);
 
-  --ct-radius: 12px;
+  --ct-radius: 14px;
   --ct-font:
-    ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+    'Inter var', Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
   --ct-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
 
   position: fixed;
@@ -63,13 +67,15 @@
 }
 
 .ct-root[data-theme='light'] {
-  --ct-surface: rgb(255 255 255 / 0.97);
+  --ct-surface: rgb(255 255 255 / 0.9);
   --ct-surface-2: rgb(15 15 25 / 0.04);
   --ct-surface-3: rgb(15 15 25 / 0.08);
   --ct-border: rgb(15 15 25 / 0.1);
   --ct-text: #18181b;
   --ct-text-muted: #6b6b76;
-  --ct-shadow: 0 12px 32px rgb(15 15 25 / 0.14), 0 2px 8px rgb(15 15 25 / 0.08);
+  --ct-shadow:
+    0 24px 48px -12px rgb(15 15 25 / 0.18), 0 4px 12px rgb(15 15 25 / 0.08),
+    inset 0 1px 0 rgb(255 255 255 / 0.8);
   color-scheme: light;
 }
 
@@ -224,7 +230,7 @@
   border: 1px solid var(--ct-border);
   border-radius: var(--ct-radius);
   background: var(--ct-surface);
-  backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.8);
   box-shadow: var(--ct-shadow);
   pointer-events: auto;
   overflow: hidden;
@@ -239,6 +245,15 @@
   border-bottom: 1px solid var(--ct-border);
   cursor: grab;
   user-select: none;
+  touch-action: none;
+}
+
+.ct-panel.is-minimised .ct-panel__body {
+  display: none;
+}
+
+.ct-panel.is-minimised .ct-panel__header {
+  border-bottom: 0;
 }
 
 .ct-panel__header:active {
@@ -556,9 +571,9 @@ button {
   gap: 4px;
   padding: 6px;
   border: 1px solid var(--ct-border);
-  border-radius: 14px;
+  border-radius: 18px;
   background: var(--ct-surface);
-  backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.8);
   box-shadow: var(--ct-shadow);
   pointer-events: auto;
   animation: ct-pop 160ms ease-out;
@@ -618,8 +633,18 @@ button {
 }
 
 .ct-dock__btn.is-active {
-  background: var(--ct-accent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ct-accent), white 14%),
+    var(--ct-accent)
+  );
   color: white;
+  box-shadow: var(--ct-glow);
+}
+
+.ct-dock__btn:active,
+.ct-dock__unit:active {
+  transform: scale(0.94);
 }
 
 .ct-dock__btn--close:hover {
@@ -634,16 +659,51 @@ button {
   background: var(--ct-border);
 }
 
+.ct-dock__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px 2px 6px;
+}
+
 .ct-dock__hint {
-  padding: 0 6px 2px;
+  overflow: hidden;
   color: var(--ct-text-muted);
   font-size: 11px;
-  text-align: center;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.ct-dock__hint:empty {
-  display: none;
+.ct-dock__viewport {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 6px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--ct-surface-2);
+  color: var(--ct-text-muted);
+  font: 500 10.5px/1.5 var(--ct-mono);
+  cursor: pointer;
+}
+
+.ct-dock__viewport:hover {
+  color: var(--ct-text);
+}
+
+.ct-dock__bp {
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--ct-accent-soft);
+  color: var(--ct-accent);
+  font-weight: 700;
+}
+
+.ct-dock.is-top [data-tip]:hover::after {
+  top: calc(100% + 8px);
+  bottom: auto;
 }
 
 [data-tip]:hover::after {
@@ -1047,4 +1107,131 @@ button {
 .ct-palette__item:hover {
   outline: 2px solid var(--ct-accent);
   outline-offset: 1px;
+}
+
+/* ---------- Screenshot mode ---------- */
+
+.ct-root.is-shooting .ct-dock,
+.ct-root.is-shooting .ct-panel,
+.ct-root.is-shooting .ct-toast {
+  visibility: hidden;
+}
+
+/* ---------- Form controls ---------- */
+
+.ct-row__key--wide {
+  flex: 1;
+  color: var(--ct-text);
+}
+
+.ct-row__main--end {
+  flex: none;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.ct-segmented {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--ct-surface-2);
+}
+
+.ct-segmented button {
+  padding: 3px 9px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ct-text-muted);
+  font: 500 11px var(--ct-font);
+  cursor: pointer;
+}
+
+.ct-segmented button[aria-checked='true'] {
+  background: var(--ct-surface-3);
+  color: var(--ct-text);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+}
+
+.ct-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 28px;
+  cursor: pointer;
+}
+
+.ct-switch {
+  appearance: none;
+  position: relative;
+  width: 30px;
+  height: 18px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--ct-surface-3);
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.ct-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  transition: transform 150ms;
+}
+
+.ct-switch:checked {
+  background: var(--ct-accent);
+}
+
+.ct-switch:checked::after {
+  transform: translateX(12px);
+}
+
+.ct-range {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--ct-accent);
+}
+
+.ct-dropzone {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 18px 12px;
+  border: 1.5px dashed var(--ct-border);
+  border-radius: 12px;
+  background: var(--ct-surface-2);
+  color: var(--ct-text-muted);
+  text-align: center;
+  cursor: pointer;
+}
+
+.ct-dropzone:hover {
+  border-color: var(--ct-accent);
+  color: var(--ct-text);
+}
+
+.ct-dropzone strong {
+  color: var(--ct-text);
+  font-weight: 600;
+}
+
+.ct-dropzone span {
+  font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-switch,
+  .ct-switch::after {
+    transition: none;
+  }
 }

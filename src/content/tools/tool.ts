@@ -86,7 +86,7 @@ export abstract class BaseTool {
   }
 
   protected elementAt(point: Point): Element | null {
-    return pageElementAt(point, this.ctx.host.element);
+    return pageElementAt(point, this.ctx.host.owns);
   }
 
   /** Re-runs `render` (rAF-coalesced by the caller if needed) on scroll and resize. */

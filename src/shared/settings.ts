@@ -121,10 +121,16 @@ export async function loadSettings(): Promise<Settings> {
   return mergeSettings(stored[STORAGE_KEY]);
 }
 
-export async function saveSettings(patch: Partial<Settings>): Promise<Settings> {
-  const next = mergeSettings({ ...(await loadSettings()), ...patch });
-  await chrome.storage.local.set({ [STORAGE_KEY]: next });
-  return next;
+/**
+ * Persists a complete settings object. Callers keep the full state in memory and write it
+ * whole, which avoids lost updates from concurrent read-modify-write cycles.
+ */
+export async function saveSettings(settings: Settings): Promise<void> {
+  await chrome.storage.local.set({ [STORAGE_KEY]: mergeSettings(settings) });
+}
+
+export function settingsEqual(a: Settings, b: Settings): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
 }
 
 /** Subscribes to settings changes made anywhere in the extension. Returns an unsubscribe function. */

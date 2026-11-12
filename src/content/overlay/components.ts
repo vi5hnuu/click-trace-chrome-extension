@@ -84,3 +84,44 @@ export function note(text: string, tone: BadgeTone = 'neutral'): HTMLElement {
 export function kbd(key: string): HTMLElement {
   return h('kbd', { class: 'ct-kbd', text: key });
 }
+
+/** Single-choice pill group. */
+export function segmented<T extends string>(
+  options: readonly { readonly value: T; readonly label: string }[],
+  selected: T,
+  onChange: (value: T) => void,
+): HTMLElement {
+  return h(
+    'div',
+    { class: 'ct-segmented', attrs: { role: 'radiogroup' } },
+    options.map(({ value, label }) =>
+      h('button', {
+        text: label,
+        attrs: { type: 'button', role: 'radio', 'aria-checked': String(value === selected) },
+        on: {
+          click: () => {
+            onChange(value);
+          },
+        },
+      }),
+    ),
+  );
+}
+
+/** Labelled on/off switch. */
+export function toggle(
+  label: string,
+  checked: boolean,
+  onChange: (checked: boolean) => void,
+): HTMLElement {
+  const input = h('input', {
+    class: 'ct-switch',
+    attrs: { type: 'checkbox', role: 'switch', ...(checked && { checked: '' }) },
+    on: {
+      change: (event) => {
+        onChange((event.target as HTMLInputElement).checked);
+      },
+    },
+  });
+  return h('label', { class: 'ct-toggle' }, [h('span', { text: label }), input]);
+}

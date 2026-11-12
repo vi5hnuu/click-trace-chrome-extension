@@ -56,3 +56,23 @@ describe('cssEscape', () => {
     expect(document.querySelectorAll(`#${cssEscape('1abc')}`)).toHaveLength(0);
   });
 });
+
+describe('isEditableTarget', async () => {
+  const { isEditableTarget } = await import('../../src/content/lib/dom');
+  const keyOn = (element: HTMLElement) => {
+    document.body.append(element);
+    let result = false;
+    element.addEventListener('keydown', (event) => (result = isEditableTarget(event)));
+    element.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, composed: true }));
+    return result;
+  };
+  it('treats text fields as editable but not checkboxes or buttons', () => {
+    const input = (type: string) => Object.assign(document.createElement('input'), { type });
+    expect(keyOn(input('text'))).toBe(true);
+    expect(keyOn(input('number'))).toBe(true);
+    expect(keyOn(input('range'))).toBe(true);
+    expect(keyOn(input('checkbox'))).toBe(false);
+    expect(keyOn(document.createElement('button'))).toBe(false);
+    expect(keyOn(document.createElement('textarea'))).toBe(true);
+  });
+});

@@ -68,12 +68,15 @@ export function unitContexts(): { x: UnitContext; y: UnitContext } {
   };
 }
 
+/** Returns true for elements that belong to Click Trace itself. */
+export type OverlayPredicate = (element: Element) => boolean;
+
 /**
  * The page element under a viewport point, ignoring our own overlay and descending
  * into open shadow roots so web components can be inspected.
  */
-export function pageElementAt(point: Point, overlayHost: Element): Element | null {
-  const isPageElement = (el: Element) => el !== overlayHost && !overlayHost.contains(el);
+export function pageElementAt(point: Point, isOverlay: OverlayPredicate): Element | null {
+  const isPageElement = (el: Element) => !isOverlay(el);
   let found = document.elementsFromPoint(point.x, point.y).find(isPageElement) ?? null;
   while (found?.shadowRoot) {
     const inner = found.shadowRoot.elementsFromPoint(point.x, point.y).find(isPageElement);
@@ -84,10 +87,8 @@ export function pageElementAt(point: Point, overlayHost: Element): Element | nul
 }
 
 /** Every page element stacked under a point (top-most first), excluding the overlay. */
-export function pageElementsAt(point: Point, overlayHost: Element): Element[] {
-  return document
-    .elementsFromPoint(point.x, point.y)
-    .filter((el) => el !== overlayHost && !overlayHost.contains(el));
+export function pageElementsAt(point: Point, isOverlay: OverlayPredicate): Element[] {
+  return document.elementsFromPoint(point.x, point.y).filter((el) => !isOverlay(el));
 }
 
 /** Parent element, crossing shadow-root boundaries. */
@@ -179,12 +180,25 @@ export function rafThrottle<A extends unknown[]>(fn: (...args: A) => void): (...
   };
 }
 
+/** Input types that do not take typed text, so page shortcuts should still work on them. */
+const NON_TEXT_INPUTS = new Set([
+  'checkbox',
+  'radio',
+  'button',
+  'submit',
+  'reset',
+  'color',
+  'file',
+  'image',
+]);
+
+/** True when the key event targets something the user is typing into (or a slider). */
 export function isEditableTarget(event: Event): boolean {
   const target = event.composedPath()[0];
   if (!(target instanceof HTMLElement)) return false;
+  if (target instanceof HTMLInputElement) return !NON_TEXT_INPUTS.has(target.type);
   return (
     target.isContentEditable ||
-    target instanceof HTMLInputElement ||
     target instanceof HTMLTextAreaElement ||
     target instanceof HTMLSelectElement
   );
