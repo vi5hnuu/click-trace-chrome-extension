@@ -1,6 +1,6 @@
 {
   "name": "click-trace",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "description": "Inspect, measure and trace any element on the page — a frontend developer toolkit for Chrome.",
   "type": "module",

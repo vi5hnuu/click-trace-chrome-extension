@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Click Trace — CSS Inspector, Ruler & Spacing Tool",
   "short_name": "Click Trace",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Inspect CSS, box model and contrast, measure with a snapping ruler, check spacing, grids and pixel-perfect design overlays.",
   "homepage_url": "https://click-trace.laxmi.solutions/",
   "minimum_chrome_version": "116",
