@@ -55,7 +55,6 @@ src/content/
   tools/             one class per tool, all extending BaseTool
   lib/               pure helpers (geometry, color, units, css, selector) + DOM helpers
 tests/               Vitest unit tests for the pure modules
-docs/                landing page + privacy policy (GitHub Pages), with SEO meta and JSON-LD
 store/               Chrome Web Store listing copy, screenshots and promo tile
 ```
 
@@ -72,7 +71,8 @@ justifications and privacy answers from [`store/listing.md`](store/listing.md).
 
 ### Website
 
-`docs/` is a static site. Enable it under **Settings → Pages → Deploy from a branch → `main` / `/docs`**.
-It is served at https://vi5hnuu.github.io/click-trace-chrome-extension/. After publishing, submit
-`sitemap.xml` in Google Search Console and replace the "Add to Chrome" links (search URL for now)
-with the extension's direct Web Store URL.
+The landing page, https://click-trace.laxmi.solutions, is built from `apps/click-trace` in the
+laxmi-solutions Next.js monorepo (`content.ts` holds its copy and screenshots). The privacy policy and
+terms are at https://legal.laxmi.solutions/click-trace/privacy-policy and
+https://legal.laxmi.solutions/click-trace/terms-of-service. Once the Web Store listing is live, set its
+item ID in that site's `content.ts` so the "Add to Chrome" buttons open the listing directly.

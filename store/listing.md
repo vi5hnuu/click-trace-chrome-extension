@@ -58,7 +58,7 @@ Questions or ideas? https://github.com/vi5hnuu/click-trace-chrome-extension/issu
 | Small promo tile      | 440×280  | `store/promo-small-440x280.png` |
 | Store icon            | 128×128  | `public/icons/128x128.png`      |
 
-**Website**: https://vi5hnuu.github.io/click-trace-chrome-extension/
+**Website**: https://click-trace.laxmi.solutions/
 **Support**: https://github.com/vi5hnuu/click-trace-chrome-extension/issues
 
 ## Privacy practices tab
@@ -78,4 +78,4 @@ Questions or ideas? https://github.com/vi5hnuu/click-trace-chrome-extension/issu
 **Data usage**: Click Trace does not collect or transmit any user data. Tick no data types, and certify the three
 limited-use statements.
 
-**Privacy policy URL**: https://vi5hnuu.github.io/click-trace-chrome-extension/privacy.html
+**Privacy policy URL**: https://legal.laxmi.solutions/click-trace/privacy-policy

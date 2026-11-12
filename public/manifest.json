@@ -4,7 +4,7 @@
   "short_name": "Click Trace",
   "version": "2.0.0",
   "description": "Inspect CSS, box model and contrast, measure with a snapping ruler, check spacing, grids and pixel-perfect design overlays.",
-  "homepage_url": "https://vi5hnuu.github.io/click-trace-chrome-extension/",
+  "homepage_url": "https://click-trace.laxmi.solutions/",
   "minimum_chrome_version": "116",
   "permissions": [
     "activeTab",
