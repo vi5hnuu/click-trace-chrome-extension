@@ -29,6 +29,9 @@ function isImageFile(file: File | null | undefined): file is File {
   return file?.type.startsWith('image/') === true;
 }
 
+/** Custom property carrying the design host's blend mode into its shadow stylesheet. */
+const BLEND_PROPERTY = '--click-trace-blend';
+
 /**
  * Overlay — PerfectPixel-style design QA. Drop, paste or choose a mockup, then compare
  * it with the live page using opacity or difference blending. The image is anchored in
@@ -140,10 +143,14 @@ export class PixelTool extends BaseTool {
     host.setAttribute('popover', 'manual');
     const shadow = host.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
+    // `!important` rules in a shadow tree outrank the host's inline style, so the blend mode can't be
+    // set inline (`all: initial` would reset it). It comes through a custom property instead, which
+    // `all` leaves alone: see renderImage().
     style.textContent = `
       :host { all: initial !important; position: fixed !important; inset: 0 !important;
         margin: 0 !important; border: 0 !important; padding: 0 !important; background: none !important;
-        overflow: hidden !important; pointer-events: none !important; display: block !important; }
+        overflow: hidden !important; pointer-events: none !important; display: block !important;
+        mix-blend-mode: var(${BLEND_PROPERTY}, normal) !important; }
       img { position: fixed; max-width: none; user-select: none; -webkit-user-drag: none;
         pointer-events: auto; cursor: move; touch-action: none; }
       img.is-locked { pointer-events: none; cursor: default; }
@@ -243,7 +250,7 @@ export class PixelTool extends BaseTool {
     image.style.width = `${this.image.width * scale}px`;
     image.style.opacity = String(this.opacity);
     image.classList.toggle('is-locked', this.locked);
-    host.style.mixBlendMode = this.difference ? 'difference' : 'normal';
+    host.style.setProperty(BLEND_PROPERTY, this.difference ? 'difference' : 'normal');
   }
 
   private chooseFile(): void {
